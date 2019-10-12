@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    html {
+        font-size: 100px;
+    }
+</style>
+
+<body bgcolor="#000">
+
+    <div style="width: 15.36rem;height: 8.04rem;border: 1px solid red;position: relative;">
+         <svg width=" 15.36rem" height="8.04rem" id="hospitalDepartureThree" style="position: absolute;"></svg>
+         <div id="hospitalDepartureThreeLogo" style="width:100%; height: 100%;"></div>
+    </div>
+
+
+    <script src="../../js/d3.min.js"></script>
+    <script src="3Dpieladderfour.js"></script>
+    <script>
+        let hospitalDepartureThree = document.getElementById('hospitalDepartureThree');
+        let values = [20, 50, 80, 115];
+        PieLadderfour3D.draw({
+            id: 'hospitalDepartureThree',
+            width: hospitalDepartureThree.clientWidth,
+            height: hospitalDepartureThree.clientHeight,
+            values: values,
+            names: ['骚扰电话', '咨询电话', '其他', '受理数量'],
+            colors: ['#f46b18', '#ffc71e', '#38ff76', '#0fd3d1'],
+            tilt: 0.5,
+            radius: 200
+        });
+
+        function randomData() {
+            values.map(function (d, i) {
+                return values[i] = Math.round(1000 * Math.random());
+            });
+            values.sort((a, b) => {
+                return a - b;
+            })
+        }
+
+        
+        // setInterval(() => {
+        //     randomData(values);
+        //     console.log(values);
+        //     PieLadder3D.draw({
+        //     id: 'hospitalDepartureThree',
+        //     width: hospitalDepartureThree.clientWidth,
+        //     height: hospitalDepartureThree.clientHeight,
+        //     values: values,
+        //     names: ['高遵从度', '合格', '部分遵从', '从未遵从度', '低遵从度'],
+        //     colors: ['#f4650e', '#ffc71d', '#32ff72', '#2f79f4', '#0fd3d1'],
+        //     tilt: 0.5,
+        //     radius: 200
+        // });
+        // }, 5000);
+    </script>
+</body>

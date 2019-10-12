@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../js/d3.min.js"></script>
+</head>
+
+<body>
+  <svg width=300 height=1400 id="timeAxis" style="margin-left: 500px;">
+  </svg>
+  <script>
+    (() => {
+      let drawTimeAxis = {};
+      drawTimeAxis.draw = (args) => {
+        let width = args.width,
+          height = args.height,
+          id = args.id,
+          year = args.year,
+          dataObj = args.dataObj,
+          maxHeight = 7, // 显示最多的年份
+          shaftHeight = 226, // 一年的高度
+          initHeight = 0,
+          index = -1, // 当前年份是否在当前时间序列中 -1 表示不存在
+          svg = d3.select(`#${id}`);
+
+        svg.selectAll('*').remove(); // 清空画布 
+
+        let block = svg.append('g');
+
+        // 对时间进行排序
+        dataObj.sort((a, b) => {
+          return a.Year - b.Year;
+        });
+
+        for (let i = 0; i < dataObj.length; i++) {
+          let years = block.append('g').attr('transform', `translate(0, ${shaftHeight * i})`);
+          if (i !== dataObj.length - 1) {
+            years.append('path')
+              .attr('class', 'yearsPath')
+              .attr('d', 'M0 3 L20 0 L42 0 L42 6 L20 6 z')
+              .attr('transform', 'translate(240, 22)')
+              .attr('fill', '#30c7ff');
+
+            years.selectAll('.timeUse')
+              .data(d3.range(44, 240, 22))
+              .enter()
+              .append('path')
+              .attr('d', 'M0 3 L18 0 L30 0 L30 6 L18 6 z')
+              .attr('transform', (d, i) => {
+                return `translate(252, ${d})`;
+              })
+              .attr('fill', '#12466a');
+          } else {
+            years.append('path')
+              .attr('d', 'M0 3 L20 0 L42 0 L42 6 L20 6 z')
+              .attr('transform', 'translate(240, 22)')
+              .attr('fill', '#30c7ff');
+          }
+          years.append('text')
+            .attr('x', 190)
+            .attr('y', 37)
+            .attr('class', 'yearsText')
+            .attr('text-anchor', 'middle')
+            // .attr('fill', 'white')
+            .attr('font-size', '30px')
+            .text(dataObj[i].Year);
+        }
+
+        // 选中当前年份，计算偏移量
+        dataObj.forEach((v, i) => {
+          if (v.Year == year) {
+            index = i;
+          }
+        });
+        if (index !== -1) {
+          if (index < 3) {
+            block.attr('transform', 'translate(0, 0)')
+              .transition()
+              .duration(2000)
+              .attr('transform', `translate(0, ${-((index - 3) * shaftHeight)})`);
+          } else {
+            block.attr('transform', 'translate(0, 0)')
+              .transition()
+              .duration(2000)
+              .attr('transform', `translate(0, ${-((index - 3) * shaftHeight)})`);
+          }
+
+          function getClassDom(cla) {
+            return document.getElementsByClassName(cla)[index];
+          }
+
+          d3.select(getClassDom('yearsText'))
+            .transition()
+            .duration(2000)
+            .attr('x', 110)
+            .attr('y', 60)
+            .attr('font-size', '80px')
+            .attr('fill', '#30c7ff');
+
+          d3.select(getClassDom('yearsPath'))
+            .transition()
+            .duration(2000)
+            .attr('transform', 'translate(200, 22)')
+            .attr('d', 'M0 5 L60 0 L82 0 L82 10 L60 10 z');
+        }
+
+
+      }
+      this.drawTimeAxis = drawTimeAxis;
+    })();
+
+    drawTimeAxis.draw({
+      width: 300,
+      height: 1360,
+      id: 'timeAxis',
+      year: 2012,
+      dataObj: [{
+        Year: 2019
+      }, {
+        Year: 2018
+      }, {
+        Year: 2017
+      }, {
+        Year: 2016
+      }, {
+        Year: 2015
+      }, {
+        Year: 2014
+      }, {
+        Year: 2013
+      }, {
+        Year: 2012
+      }, {
+        Year: 2011
+      }]
+    })
+  </script>
+</body>
+
+</html>

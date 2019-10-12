@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        img {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            display: block;
+        }
+    </style>
+    <script src="heatmap.js"></script>
+</head>
+
+<body>
+    <div id="heatmap" style="width: 2160px; height: 1180px; border: 1px solid; border-color: grey;">
+
+        <!-- <img alt="" src="123.jpg"> -->
+
+
+    </div>
+
+    <script type="text/javascript">
+        //单个数据点的添加方式 
+        function hello2() {
+            // 创建一个heatmap实例对象
+            // “h337” 是heatmap.js全局对象的名称。可以使用它来创建热点图实例
+            var heatmapInstance = h337.create({
+                //这里直接指定热点图渲染的div了。
+                //heatmap支持自定义的样式方案，具体可看官网api
+                container: document.querySelector('#heatmap'),
+                gradient: {
+                    // enter n keys between 0 and 1 here
+                    // for gradient color customization
+                    '0': '#68ef8c',
+                    '.5': '#fcc660',
+                    '1': '#fc6960'
+                }
+            });
+
+            heatmapInstance.addData([{"x":"1303","y":"445","value":139},{"x":"1337","y":"517","value":227},{"x":"1302","y":"517","value":155},{"x":"1236","y":"687","value":117},{"x":"1035","y":"624","value":66},{"x":"1336","y":"239","value":109},{"x":"1078","y":"299","value":155},{"x":"853","y":"283","value":219},{"x":"1196","y":"385","value":267},{"x":"1130","y":"540","value":53},{"x":"1315","y":"891","value":59},{"x":"1063","y":"773","value":166},{"x":"770","y":"565","value":190},{"x":"721","y":"428","value":254}]);
+        }
+        hello2();
+    </script>
+</body>
+
+</html>

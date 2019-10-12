@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    html {
+        font-size: 100px;
+    }
+</style>
+
+<body bgcolor="#000">
+
+    <div style="width: 25.60rem;height: 13.42rem;border: 1px solid red;">
+        <svg width=" 25.60rem" height="13.42rem" id="hospitalDepartureThree"></svg>
+    </div>
+
+
+    <script src="../../js/d3.min.js"></script>
+    <script src="PieLadder3DPositive.js"></script>
+    <script>
+        let hospitalDepartureThree = document.getElementById('hospitalDepartureThree');
+        let values = [30, 5, 600, 80, 80, 200];
+        PieLadder3DPositive.draw({
+            id: 'hospitalDepartureThree',
+            width: hospitalDepartureThree.clientWidth,
+            height: hospitalDepartureThree.clientHeight,
+            values: values,
+            names: ['高遵从度', '合格', '部分遵从', '从未遵从度', '低遵从度'],
+            colors: ['#f4650e', '#ffc71d', '#32ff72', '#2f79f4', '#0fd3d1', '#bc56e4'],
+            tilt: 0.8,
+            radius: 200
+        });
+
+        function randomData() {
+            values.map(function (d, i) {
+                return values[i] = Math.round(1000 * Math.random());
+            });
+            values.sort((a, b) => {
+                return a - b;
+            })
+        }
+
+        // setInterval(() => {
+        //     randomData(values);
+        //     console.log(values);
+        //     PieLadder3D.draw({
+        //     id: 'hospitalDepartureThree',
+        //     width: hospitalDepartureThree.clientWidth,
+        //     height: hospitalDepartureThree.clientHeight,
+        //     values: values,
+        //     names: ['高遵从度', '合格', '部分遵从', '从未遵从度', '低遵从度'],
+        //     colors: ['#f4650e', '#ffc71d', '#32ff72', '#2f79f4', '#0fd3d1'],
+        //     tilt: 0.5,
+        //     radius: 200
+        // });
+        // }, 5000);
+
+        let dataObj = [{
+            "name": "高遵从度",
+            "value": "0.46"
+        }, {
+            "name": "合格",
+            "value": "0.19"
+        }, {
+            "name": "部分遵从",
+            "value": "0.15"
+        }, {
+            "name": "从未遵从度",
+            "value": "0.4"
+        }, {
+            "name": "低遵从度",
+            "value": "0.10"
+        }];
+        let colors = ['#f4650e', '#ffc71d', '#32ff72', '#2f79f4', '#0fd3d1'];
+
+        for (let i = 0, len = dataObj.length; i < len; i++) {
+            dataObj[i].color = colors[i];
+        }
+
+        dataObj.sort(function(a, b) {
+             return a.value - b.value;
+        })
+        console.log(dataObj);
+        
+    </script>
+</body>

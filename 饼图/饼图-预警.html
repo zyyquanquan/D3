@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../js/d3.min.js"></script>
+    <style>
+        html {
+            font-size: 100px;
+        }
+    </style>
+</head>
+
+<body bgcolor="#000">
+    <div style="position: relative;width: 1.9rem;height: 2.6rem;"">
+            <svg width=" 190" height="200" id="caseEntry" style="position: absolute;z-index: 2;"> </svg>
+        <img src="images/shadowBgGreen.png" alt=""
+            style="position: absolute;left: 2%;top: 4%;transform: rotate(37deg);" id="caseEntryImgBg">
+       
+    </div>
+    <script>
+        let width = 190;
+        let height = 200;
+
+
+        let dataObj = {
+            name: '广州',
+            value: '60'
+        };
+        let waring = 50;
+
+        _blackBgPie(dataObj, 190, 200, '#caseEntry', '#caseEntryImgBg', waring);
+        /**
+         * 指针旋转仪表盘，超过预警值变红，默认绿色 (用于120救护车平均出车时间一级)
+         * @param {Object} dataObj {name: ‘地区’, value: 秒数}
+         * @param {Number} width SVG的宽度
+         * @param {Number} height SVG的高度
+         * @param {String} svgId svg的ID对象
+         * @param {String} imgId 指针的ID对象
+         * @param {NUmber} waring 预警值
+         */
+        function _blackBgPie(dataObj, width, height, svgId, imgId, waring) {
+            let svg = d3.select('#caseEntry');
+            let value = Number(dataObj.value);
+            let remainder = dataObj.value % 20; // 得到余数
+            let multiple = parseInt(dataObj.value / 20); // 得到20的倍数
+            let data = [];
+            for (let index = 0; index < multiple; index++) {
+                data.push(20);
+            }
+            if (remainder !== 0) {
+                data.push(remainder);
+            }
+            if (multiple !== 5) {
+                data.push(100 - value);
+            }
+            let caseEntryImgBg = d3.select(imgId);
+            
+            if (value <= waring) {
+                caseEntryImgBg.attr('src', 'images/shadowBgRed.png');
+            }
+            
+
+            let pie = d3.layout.pie() // 创建饼图布局
+                .sort(null)
+                .value((d) => {
+                    return d
+                }); // 值访问器
+
+            let piedata = pie(data); // 转换数据
+
+            // 创建弧生成器
+            let arc = d3.svg.arc()
+                .padAngle(0.01)
+                .innerRadius(width / 3.03)
+                .outerRadius(width / 2.11);
+
+            // 创建颜色比例尺
+            let color = d3.scale.category20();
+            // 添加对应数目的弧组，即g元素
+            let arcs = svg.selectAll('g').data(piedata)
+                .enter()
+                .append('g')
+                .attr('transform', `translate(${width/2.15}, ${height/2})`);
+
+            arcs.append('path')
+                .attr('fill', (d, i) => {
+                    if (value <= waring) {
+                        if (data.length - 1 == i) {
+                            return 'transparent';
+                        } else {
+                            return '#fa3840';
+                        }
+                    } else {
+                        if (value == 100) {
+                            return '#25b7b6';
+                        } else {
+                            if (data.length - 1 == i) {
+                                return 'transparent';
+                            } else {
+                                return '#25b7b6';
+                            }
+                        }
+                    }
+                })
+                .transition() //设置动画
+                .duration(1000) //持续时间
+                .attrTween('d', tweenPie) //两个属性之间平滑的过渡。
+
+            svg.append('text')
+                .attr('transform', (d) => {
+                    let x = width / 2.15; // 文字的x坐标
+                    let y = height / 1.9; // 文字的y坐标
+                    return `translate(${x}, ${y})`;
+                })
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '0.3rem')
+                .attr('font-family', 'MyCustomFont')
+                .attr('fill', '#fff')
+                .text(0)
+                .transition()
+                .duration(1000)
+                .tween("text", function () {
+                    var d = value,
+                        i = d3.interpolate(this.textContent, d),
+                        prec = (d + "").split("."),
+                        round = (prec.length > 1) ? Math.pow(10, prec[1].length) : 1;
+                    return function (t) {
+                        this.textContent = Math.round(i(t) * round) / round + '%';
+                    };
+                });
+
+            function tweenPie(b) {
+                //这里将每一个的弧的开始角度和结束角度都设置成了0
+                //然后向他们原始的角度(b)开始过渡，完成动画。
+                b.innerRadius = 0;
+                var i = d3.interpolate({
+                    startAngle: 0,
+                    endAngle: 0
+                }, b);
+                return function (t) {
+                    return arc(i(t));
+                };
+            }
+        }
+    </script>
+</body>
+
+</html>

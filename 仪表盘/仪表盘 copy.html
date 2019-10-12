@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>仪表盘</title>
+    <script src="../js/d3.min.js"></script>
+</head>
+
+<body>
+    <svg width=200 height=200 id="gauge" style="border: 1px solid red;margin-left: 50%">
+        <defs>
+            <!-- 磁盘警告渐变 -->
+            <linearGradient id="diskWaringGradientgrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#1031fe;stop-opacity:1"></stop>
+                <stop offset="100%" style="stop-color:#cb3940;stop-opacity:1"></stop>
+            </linearGradient>
+            <!-- 磁盘正常渐变 -->
+            <linearGradient id="diskNormalGradientgrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#021dbe;stop-opacity:1"></stop>
+                <stop offset="100%" style="stop-color:#00c0ff;stop-opacity:1"></stop>
+            </linearGradient>
+        </defs>
+    </svg>
+    <script>
+        const width = 200,
+            height = 200,
+            svg = d3.select('#gauge'),
+            scaleBlock = svg.append('g').attr('transform',
+                `translate(${width * 0.5}, ${height * 0.5})`),
+            scaleNum = svg.append('g').attr('transform',
+                `translate(${width * 0.5}, ${height * 0.5})`),
+            // 大刻度
+            radiusScaleBig = d3.scale.linear().domain([0, 100]).range([Math.PI / -1.256, Math.PI / 1.256]),
+            // 小刻度
+            radiusScaleSmall = d3.scale.linear().domain([0, 60]).range([Math.PI / -1.256, Math.PI / 1.256]);
+        // 最里层刻度
+        radiusDisc = d3.scale.linear().domain([0, 14]).range([Math.PI / -1.3, Math.PI / 1.3]);
+        // 绘制数字
+        scaleNum
+            .selectAll('.scaleNum')
+            .data(d3.range(0, 110, 10))
+            .enter()
+            .append('text')
+            .attr('x', d => width * 0.37 * Math.sin(radiusScaleBig(d)))
+            .attr('y', d => width * 0.37 * Math.cos(radiusScaleBig(d)) * -1)
+            .attr('text-anchor', 'middle')
+            .attr('font-size', '16px')
+            .attr('dy', '0.35em')
+            .attr('fill', '#306fa8')
+            .text(d => d);
+
+        // 绘制小刻度
+        scaleBlock
+            .selectAll('.radiusScaleSmall')
+            .data(d3.range(0, 60))
+            .enter()
+            .append('line')
+            .attr('x1', d => width * 0.5 * Math.sin(radiusScaleSmall(d)))
+            .attr('y1', d => width * 0.5 * Math.cos(radiusScaleSmall(d)) * -1)
+            .attr('x2', d => width * 0.46 * Math.sin(radiusScaleSmall(d)))
+            .attr('y2', d => width * 0.46 * Math.cos(radiusScaleSmall(d)) * -1)
+            .attr('stroke', '#0a2b5b')
+            .attr('stroke-width', 2);
+
+        // 绘制最里层刻度
+        scaleBlock
+            .selectAll('.radiusDisc')
+            .data(d3.range(0, 110, 10))
+            .enter()
+            .append('line')
+            .attr('x1', d => width * 0.5 * Math.sin(radiusScaleBig(d)))
+            .attr('y1', d => width * 0.5 * Math.cos(radiusScaleBig(d)) * -1)
+            .attr('x2', d => width * 0.425 * Math.sin(radiusScaleBig(d)))
+            .attr('y2', d => width * 0.425 * Math.cos(radiusScaleBig(d)) * -1)
+            .attr('stroke', '#0e5da1')
+            .attr('stroke-width', 2);
+
+        // 绘制大刻度
+        scaleBlock
+            .selectAll('.radiusScaleBig')
+            .data(d3.range(0, 15))
+            .enter()
+            .append('line')
+            .attr('x1', d => width * 0.29 * Math.sin(radiusDisc(d)))
+            .attr('y1', d => width * 0.29 * Math.cos(radiusDisc(d)) * -1)
+            .attr('x2', d => width * 0.24 * Math.sin(radiusDisc(d)))
+            .attr('y2', d => width * 0.24 * Math.cos(radiusDisc(d)) * -1)
+            .attr('stroke', '#0e5da1')
+            .attr('stroke-width', 2);
+
+        const pie = d3.layout.pie()
+            .startAngle(Math.PI / -1.256)
+            .endAngle(Math.PI / 1.256)
+            .value((d) => {
+                return d;
+            });
+
+        // 创建一个弧生成器
+        const arcPathOuter = d3.svg.arc()
+            .innerRadius(60)
+            .outerRadius(100);
+
+        const arcPathInner = d3.svg.arc()
+            .innerRadius(46)
+            .outerRadius(60);
+
+        // 添加路径
+        svg.selectAll('path')
+            .data(pie([100]))
+            .enter()
+            .append('path')
+            .attr('d', (d) => {
+                return arcPathOuter(d);
+            })
+            .attr('transform', 'translate(100, 100)')
+            .attr('opacity', 0.3)
+            .attr('fill', '#0c56b0');
+
+        // 添加路径
+        svg.selectAll('.path')
+            .data(pie([96, 4]))
+            .enter()
+            .append('path')
+            .attr('d', (d) => {
+                return arcPathInner(d);
+            })
+            .attr('transform', 'translate(100, 100)')
+            .attr('opacity', 0.3)
+            .attr('fill', (d, i) => {
+                console.log(d);
+                if (d.value < 80 && i == 0) {
+                    return 'url(#diskNormalGradientgrad)';
+                } else if((d.value >= 80 && i == 0)) {
+                    return 'url(#diskWaringGradientgrad)';
+                } else {
+                    return 'transparent';
+                }
+            });
+    </script>
+</body>
+
+</html>

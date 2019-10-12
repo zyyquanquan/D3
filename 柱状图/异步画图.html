@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../js/d3.min.js"></script>
+</head>
+
+<body>
+    <svg id="main" style="width: 600px;height: 600px;border: 1px solid red;"></svg>
+    <script>
+        function timeout(ms) {
+            return new Promise((resolve) => {
+                setTimeout(resolve, ms);
+            });
+        }
+
+        async function asyncPrint(value, ms) {
+            await timeout(ms);
+            console.log(value)
+        }
+
+        asyncPrint('hello world', 50);
+
+        function drawCircle1() {
+            return new Promise((resolve, project) => {
+                const svg = d3.select('#main');
+                svg.append('rect')
+                    .attr('x', 100)
+                    .attr('y', 100)
+                    .attr('width', 100)
+                    .attr('height', 100)
+                    .attr('fill', 'red')
+                    .transition()
+                    .duration(1000)
+                    .attr('x', 500)
+                    .each('end', () => {
+                        project();
+                    })
+            })
+        }
+
+        function drawCircle2() {
+            const svg = d3.select('#main');
+            svg.append('rect')
+                .attr('x', 300)
+                .attr('y', 200)
+                .attr('width', 100)
+                .attr('height', 100)
+                .attr('fill', 'red');
+        }
+
+        // async function asyncDraw() {
+        //     await drawCircle1();
+        //     drawCircle2();
+        // }
+
+        // asyncDraw()
+
+        (async () => {
+            try {
+                await drawCircle1();
+                drawCircle2();
+            } catch (err) {
+                console.log(err);
+            }
+        })();
+    </script>
+</body>
+
+</html>

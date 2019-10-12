@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    body, html, svg {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .background {
+        fill: none;
+        pointer-events: all;
+    }
+
+    #states {
+        fill: #aaa;
+    }
+
+    #states .active {
+        fill: orange;
+    }
+
+    #state-borders {
+        fill: none;
+        stroke: #fff;
+        stroke-width: 1.5px;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+        pointer-events: none;
+    }
+</style>
+
+<body>
+    <script src="../js/d3.min.js"></script>
+    <script src="js/topojson.js"></script>
+    <script src="mapdata/world2.js"></script>
+    <script>
+        var width = 1920,
+            height = 937,
+            centered;
+
+        var projection = d3.geo.equirectangular()
+            .scale(250)
+            .translate([width / 2, height / 2]);
+
+        var path = d3.geo.path()
+            .projection(projection);
+
+        let georoot = topojson.feature(world, world.objects.ne_110m_admin_0_countries);
+
+        var svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        svg.append("rect")
+            .attr("class", "background")
+            .attr("width", width)
+            .attr("height", height)
+            .on("click", clicked);
+
+        var g = svg.append("g");
+
+        g.append("g")
+            .attr("id", "states")
+            .selectAll("path")
+            .data(georoot.features)
+            .enter().append("path")
+            .attr("d", path)
+            .on("click", clicked);
+
+        g.append("path")
+            .datum(topojson.mesh(world, world.objects.ne_110m_admin_0_countries, function (a, b) {
+                return a !== b;
+            }))
+            .attr("id", "state-borders")
+            .attr("d", path);
+
+        function clicked(d) {
+            var x, y, k;
+            console.log(d);
+            if (d && centered !== d) {
+                var centroid = path.centroid(d);
+                x = centroid[0];
+                y = centroid[1];
+                k = 4;
+                centered = d;
+            } else {
+                x = width / 2;
+                y = height / 2;
+                k = 1;
+                centered = null;
+            }
+
+            g.selectAll("path")
+                .classed("active", centered && function (d) {
+                    return d === centered;
+                });
+
+            g.transition()
+                .duration(750)
+                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x +
+                    "," + -y + ")")
+                .style("stroke-width", 1.5 / k + "px");
+        }
+    </script>

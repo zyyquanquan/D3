@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../../../js/d3.min.js"></script>
+    <script src="cylindricalBackgroundBar.js"></script>
+    <style>
+        html {
+            font-size: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div  style="width: 11.90rem;height: 6.03rem;border: 1px solid red;">
+        <svg width="1190" height="603" id="emergencyPeople"></svg>
+    </div>
+    <script>
+        let dataset = [{"name": "广州", "value": "100"},{"name": "深圳", "value": "80"},{"name": "东莞", "value": "60"},{"name": "珠海", "value": "95"},{"name": "中山", "value": "92"},{"name": "佛山", "value": "81"}];
+
+        cylindricalBackgroundBar.draw({
+            id: 'emergencyPeople',
+            width: 1190,
+            height: 603,
+            warning: 80,
+            dataset: dataset,
+            padding: {top: 150, left: 100, bottom: 230, right: 100}
+        })
+
+
+        let body = document.getElementsByTagName('body')[0];
+        let childNodes = body.childNodes;
+        body.childNodes.forEach((v, ind) => {
+           
+        })
+    </script>
+</body>
+
+</html>

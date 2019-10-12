@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../../js/d3.min.js"></script>
+    <script src="greenBgline.js"></script>
+    <style>
+        html {
+            font-size: 100px;
+
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body bgcolor="#000">
+    <div style="width: 51.20rem;height: 4.68em;position: relative;margin: 300px auto;">
+        <svg width="5120" height="468" id="emergencyPeople" style="position: absolute;"></svg>
+    </div>
+    <script>
+        let dataset = [{
+            "name": "24",
+            "value": "30"
+        }, {
+            "name": "23",
+            "value": "20"
+        }, {
+            "name": "22",
+            "value": "18"
+        }, {
+            "name": "21",
+            "value": "20"
+        }, {
+            "name": "20",
+            "value": "17"
+        }, {
+            "name": "19",
+            "value": "15"
+        }, {
+            "name": "18",
+            "value": "14"
+        }, {
+            "name": "17",
+            "value": "16"
+        }, {
+            "name": "16",
+            "value": "12"
+        }, {
+            "name": "15",
+            "value": "0"
+        }, {
+            "name": "14",
+            "value": "10"
+        }, {
+            "name": "13",
+            "value": "12"
+        }, {
+            "name": "12",
+            "value": "11"
+        }, {
+            "name": "11",
+            "value": "8"
+        }, {
+            "name": "10",
+            "value": "15"
+        }, {
+            "name": "09",
+            "value": "6"
+        }, {
+            "name": "08",
+            "value": "17"
+        }, {
+            "name": "07",
+            "value": "13"
+        }, {
+            "name": "06",
+            "value": "13"
+        }, {
+            "name": "05",
+            "value": "0"
+        }, {
+            "name": "04",
+            "value": "35"
+        }, {
+            "name": "03",
+            "value": "7"
+        }, {
+            "name": "02",
+            "value": "6"
+        }, {
+            "name": "01",
+            "value": "60"
+        }];
+
+        greenBgline.draw({
+            id: 'emergencyPeople',
+            width: 5120,
+            height: 468,
+            dataset: dataset,
+            padding: {
+                top: 50,
+                left: 500,
+                bottom: 50,
+                right: 100
+            }
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .content {
+            position: relative;
+            left: 0%;
+            width: 400px;
+            height: 400px;
+            background: rgba(0, 197, 209, 0.4);
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body style="background: #0E2A42;">
+    <div id="content" class="content">
+    </div>
+</body>
+<script src="../js/d3.min.js"></script>
+<script>
+    var curved_column = {
+        width: 400,
+        height: 400,
+        draw: function () {
+            this.content = document.getElementById('content')
+
+            this.svg = d3.select(this.content).append('svg').attr('width', this.width).attr('height', this
+                .height)
+            this._initDom()
+        },
+        _initDom: function () {
+            var fd = 100 // 分段数
+            this.g = this.svg.append("g")
+                .attr("transform", "translate(200, 200)");
+            var compute = d3.interpolate('#1b1102', '#fbd85f');
+            var linear = d3.scale.linear()
+                .domain([0, fd])
+                .range([0, 1]);
+            var pie = d3.layout.pie()
+                .value(function (d) {
+                    return d;
+                })
+                .sort(null)
+                .startAngle(0)
+                .endAngle(1.5 * Math.PI)
+
+            var arc = d3.svg.arc()
+                .innerRadius(85)
+                .outerRadius(100);
+
+            var data = [];
+            for (var i = 0; i < fd; i++) {
+                data.push(i)
+            }
+            data.push(100)
+            console.log(pie(data));
+            function tweenPie(b) {
+                //这里将每一个的弧的开始角度和结束角度都设置成了0
+                //然后向他们原始的角度(b)开始过渡，完成动画。
+                b.innerRadius = 0;
+                var i = d3.interpolate({
+                    startAngle: 0,
+                    endAngle: 0
+                }, b);
+                //下面的函数就是过渡函数，他是执行多次最终达到想要的状态。
+                return function (t) {
+                    return arc(i(t));
+                };
+            }
+
+            this.g.datum(data).selectAll('path')
+                .data(pie)
+                .enter()
+                .append("path")
+                .attr("d", arc)
+                .style("fill", function (d, i) {
+                    return compute(linear(d.value));
+                })
+                .style("stroke", function (d, i) {
+                    return compute(linear(d.value));
+                })
+                .transition()
+                .duration(2000)
+                .attrTween('d', tweenPie);
+        }
+    }
+
+
+
+    curved_column.draw()
+</script>
+
+</html>

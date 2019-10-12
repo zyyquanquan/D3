@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../../../js/d3.min.js"></script>
+    <script src="cylinderpictorialBarTwo.js"></script>
+    <style>
+        html {
+            font-size: 100px;
+            
+        }
+        *{
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body bgcolor="#000">
+    <div  style="width: 33.28rem;height: 13.44rem;border: 1px solid red;position: relative;">
+         <svg width="3328" height="1344" id="emergencyPeople" style="position: absolute;"></svg>
+         <div style="width: 4.52rem;height: 0.4rem;position: absolute;right: 6rem;top: 3rem;color: #b4ced9;font-size: 0.24rem;">
+           <img src="images/firstAidDeds/legend-green.png" alt="" style="position: absolute;">
+           <p style="position: absolute;left: 0.46rem;">应急床位总数</p>
+           <img src="images/firstAidDeds/legend-blue.png" alt="" style="position: absolute;;left: 2.22rem;">
+           <p style="position: absolute;left: 2.60rem;">应急床位已使用数</p>
+        </div>
+    </div>
+    <script>
+        let dataset = [{"name": "广州市", "value": "45", "value1": "30"},{"name": "深圳市", "value": "110", "value1": "80"},{"name": "东莞市", "value": "100", "value1": "32"},{"name": "珠海市", "value": "140", "value1": "32"},{"name": "中山市", "value": "162", "value1": "32"},{"name": "佛山市", "value": "80", "value1": "32"}];
+
+        cylinderpictorialBarTwo.draw({
+            id: 'emergencyPeople',
+            width: 3328,
+            height: 1344,
+            warning: 110,
+            dataset: dataset,
+            padding: {top: 440, left: 100, bottom: 230, right: 100}
+        })
+
+    </script>
+</body>
+
+</html>

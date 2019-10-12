@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../js/d3.min.js"></script>
+</head>
+
+<body>
+    <script>
+        let width = 800,
+            height = 400;
+
+        let svg = d3.select('body').append('svg').attr('width', width).attr('height', height);
+
+        svg.append('rect')
+            .attr('x', 100)
+            .attr('y', 100)
+            .attr('width', 343)
+            .attr('height', 71)
+            .attr('fill', '#091e4a');
+
+        svg.append('rect')
+            .attr('x', 100)
+            .attr('y', 100)
+            .attr('width', 0)
+            .attr('height', 71)
+            .attr('stroke', 'red')
+            .attr('fill', '#fdc905')
+            .transition()
+            .duration(1000)
+            .attr('width', 343)
+    </script>
+</body>
+
+</html>
